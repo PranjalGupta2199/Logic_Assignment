@@ -11,7 +11,7 @@ Algorithm :
 5 : If an operator is encountered, then : 
         (a) Repeatedly pop from stack and add to result each operator which has the same precedence as or higher precedence than operator.
         (b) Add operator to stack
-6 : If ')' is encounteredm then :
+6 : If ')' is encountered then :
         (a) Repeatedly pop from stack and add to result each operator until a '(' is encountered
         (b) Remove the '('
 7 : END    
