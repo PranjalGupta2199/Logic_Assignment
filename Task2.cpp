@@ -4,6 +4,7 @@ using namespace std;
 
 class Leaf
 {
+public :
 	char value;
 	Leaf * parent;
 	Leaf * child1;
@@ -16,9 +17,8 @@ class Leaf
 		child1 = NULL;
 		child2 = NULL;
 		value = v;
-		flag = 0;
 	}
-}
+};
 
 int main()
 {
@@ -27,9 +27,9 @@ int main()
 	
 	Leaf * head = NULL; 
 	
-	for (int i = postfix.length() - 1, i >= 0; i--)
+	for (int i = postfix.length() - 1; i >= 0; i--)
 	{
-		Leaf temp = Leaf(postfix[i]);
+		Leaf temp(postfix[i]);
 		switch (postfix[i]) 
 		{
 			case('V') :
@@ -39,45 +39,49 @@ int main()
 				if (head == NULL){
 					head = &temp;
 				}
+				else if(head->value == 'V' || head->value == '^' || head->value == '~' || head->value == '>') {
+						head->child2 = &temp;
+						temp.parent = head;
+						head = &temp;					
+					}
 				else {
-					if(head.value != 'V' || head.value != '^' || head.value != '~' || head.value != '>') {
-						head = head.parent;
-						head.child1 = &temp;
-						temp.parent = head;
-						head = &temp;
-					
-					}
-					else {
-						head.child2 = &temp;
-						temp.parent = head;
-						head = &temp;
-						temp.flag = 1;
-					}
+					do head = head->parent;
+					while (head->child1 != NULL);
+
+					head->child1 = &temp;
+					temp.parent = head;
+					head = &temp;
 				}
 				break;
 			default :
-				if (head.parent == NULL)
+				if (head->parent == NULL)
 				{
-					head.child2 = &temp;
+					head->child2 = &temp;
+					temp.parent = head;
+					head = &temp;	
+				}
+				else if (head->value == 'V' || head->value == '^' || head->value == '>' || head->value == '~')
+				{
+					head->child2 = &temp;
 					temp.parent = head;
 					head = &temp;
-					//temp.flag = 1;			
-				}
-				else if (head.value == 'V' || head.value == '^' || head.value == '>' || head.value == '~')
-				{
-					head.child2 = &temp;
-					temp.parent = head;
-					head = temp;
 				}
 				else 
 				{
-					head = head.parent;
-					head.child1 = &temp;
-					temp.parent = head.child1;
-					head = child1;
+					do head = head->parent;
+					while (head->child1 != NULL);
+
+					head->child1 = &temp;
+					temp.parent = head;
+					head = &temp;
 				}
 				break;
 		}
 	}
 
+	while (head->parent != NULL) {
+		cout << head->value;
+		head = head->parent;
+	}
+	
 }
