@@ -32,7 +32,13 @@ int main()
     {
         Leaf* temp;
         temp = new Leaf(postfix[i]);
-
+		
+		if (temp->value == '~') {
+			Leaf *t;
+			t = new Leaf('\0');
+			temp-> child1 = t;
+		}
+        
         switch (postfix[i]) 
         {
             case('V') :
@@ -43,9 +49,9 @@ int main()
                     head = temp;       
                 }
                 else if(head->value == 'V' || head->value == '^' || head->value == '~' || head->value == '>') {
-                        head->child2 = temp;
-                        temp->parent = head;
-                        head = temp;           
+                  	head->child2 = temp;
+                    temp->parent = head;
+                    head = temp;           
                     }
                 else {
                     do head = head->parent;
@@ -56,7 +62,6 @@ int main()
                     head = temp;
                 }
                 break;
-
             default :
                 if (head->parent == NULL)
                 {
@@ -81,11 +86,10 @@ int main()
                 break;
         }
     }
-    /*
     cout<<"\n\n";
     while(head != NULL){
         cout<<head -> value;
         head = head -> parent;
     }
-	*/
+    cout << endl;
 }
