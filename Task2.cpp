@@ -21,46 +21,22 @@ public :
     	flag = 0;
     }
 };
-
-void in_order (Leaf * head_ref)
+void in_order(Leaf *head_ref)
 {
-
 	if (head_ref->child1 != NULL && head_ref->child2 != NULL)
 	{
-		if (head_ref->child1->flag != 1) 
-		{
-		    cout << "(";
-		    in_order(head_ref->child1);
-		}
-		
-		if (head_ref->flag != 1) 
-		{
-			cout << head_ref->value;
-			head_ref -> flag = 1;
-		}
-		
-		if (head_ref->child2->flag != 1) 
-		{   
-		    in_order(head_ref->child2);
-            cout << ")";
-		}
+		cout << "(";
+		in_order(head_ref->child1);
+		cout << head_ref->value;
+		in_order(head_ref->child2);
+		cout << ")";
+		return;
 	}
 	else {
-		if (head_ref->flag != 1)
-		{
-			cout << head_ref->value;
-			head_ref -> flag = 1;
-
-		}
-		else return;
+		if(head_ref->value == '\0') return;
+		else cout << head_ref->value;
+		return;
 	}
-	
-	if (head_ref->parent != NULL && head_ref -> parent -> flag != 1)
-	{	
-		head_ref = head_ref->parent;
-		in_order(head_ref);
-	}
-	else return;
 }
 
 
@@ -69,6 +45,7 @@ int main()
     string postfix;
     getline(cin, postfix);
     
+    Leaf *root = NULL;
     Leaf * head = NULL;
     for (int i = postfix.length() - 1; i >= 0; i--)
     {
@@ -89,6 +66,7 @@ int main()
             case('~') :
             case('>') :
                 if (head == NULL){
+                	root = temp;
                     head = temp;       
                 }
                 else if(head->value == 'V' || head->value == '^' || head->value == '~' || head->value == '>') {
@@ -129,7 +107,7 @@ int main()
                 break;
         }
 	}
-	cout << "(";
-	in_order(head);  
+	//cout << root->value << endl;
+	in_order(root);  
 	cout << endl; 
 }
