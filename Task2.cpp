@@ -21,20 +21,21 @@ public :
     	flag = 0;
     }
 };
+
 void in_order(Leaf *head_ref)
 {
 	if (head_ref->child1 != NULL && head_ref->child2 != NULL)
 	{
 		cout << "(";
 		in_order(head_ref->child1);
-		cout << head_ref->value;
+		cout << head_ref->value << " ";
 		in_order(head_ref->child2);
 		cout << ")";
 		return;
 	}
 	else {
 		if(head_ref->value == '\0') return;
-		else cout << head_ref->value;
+		else cout << head_ref->value << " ";
 		return;
 	}
 }

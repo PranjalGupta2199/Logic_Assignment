@@ -52,7 +52,9 @@ int main()
 				while (operators.top() != '(');
 				operators.pop(); // removes the last left parenthesis
 				break;
-				
+			case (' ') :
+			 	// If space comes in the infix input 
+				break;
 			default :
 			    // this is the case when an operand is reached.
 				postfix += infix[i];
