@@ -22,7 +22,7 @@ using namespace std;
 		2. False in case of any other premise. 
 	
 	Then check iteratively, whether any non-premise ith statement (2 <= i <= n) 
-	can be derived from it's previous statements.
+	can be derived from any of it's previous statements.
 		1. If yes, upadate the truth value of that Statement object.
 			> In case of AND introduction, both the premises must be present.
 			> In case of AND elimination, a new premise object will be created.
@@ -34,9 +34,6 @@ using namespace std;
 		2. Else, break the loop and print "Invalid Proof" and exit.
 		
 	[End of FOR loop] print "Valid Proof"
-	
-	To improve the efficiency, make a static array which will contain the value of all the 
-	statements (string type) and another static array which will contain pointers to all the statements.
 */
 
 
@@ -118,10 +115,10 @@ bool and_el2(vector <Statement *> proof, vector <bool> truth_val, int index){
 	else return false;
 }
 bool or_intro1(vector <Statement *> proof, vector <bool> truth_val, int index) {
-	Statement * formula = proof[index]; //aVb
+	Statement * formula = proof[index]; 
 	int l1 = formula->line1;
 	
-	string sub = proof[l1]->value; //a
+	string sub = proof[l1]->value; 
 	int n = sub.length() ; 
 	
 	if ("(" + sub + "V" + formula->value.substr(n+2) != formula->value) return false;
@@ -155,7 +152,7 @@ bool MT(vector <Statement *> proof, vector <bool> truth_val, int index) {
 	Statement * formula = proof[index];
 	int l1 = formula->line1;
 	int l2 = formula->line2;
-	if ("(" + formula->value.substr(1) + "->" + proof[l1]->value.substr(1) + ")" != proof[l2]->value) return false;
+	if ("(" + formula->value.substr(1) + "->" + proof[l2]->value.substr(1) + ")" != proof[l1]->value) return false;
 	else if (truth_val[l1] == true && truth_val[l2] == true) return true;
 	else return false;
 }
