@@ -90,24 +90,57 @@ bool and_intro(vector <Statement *> proof, vector <bool> truth_val, int index){
 	string rule2 = proof[line2]->value;
 	
 	if (formula->value != "(" + rule1 + "^" + rule2 + ")") return false;
-	
-	if (truth_val[line1] == true && truth_val[line2] == true) return true;
+	else if (truth_val[line1] == true && truth_val[line2] == true) return true;
 	else return false;
 }
 
 
-bool and_el1(vector <Statement *> proof, vector <bool> truth_val, int index){
+bool and_el(vector <Statement *> proof, vector <bool> truth_val, int index){
+	Statement * formula = proof[index];
+	
+	int line1 = formula->line1;
+	
+	string rule1 = proof[line1]->value;
+	//if (formula->value != rule1) return false;
+	if (truth_val[line1] == true) return true;
+	else return false;
+}
+
+bool or_intro1(vector <Statement *> proof, vector <bool> truth_val, int index) {
+	Statement * formula = proof[index];
+	
+	int line1 = formula->line1;
+	
+	string rule1 = proof[line1]->value;
+	if (truth_val[line1] == true) return true;
+	else return false;
+
+}
+//bool or_intro2(vector <Statement *> proof, vector <bool> truth_val, int index) {}
+bool impl_el(vector <Statement *> proof, vector <bool> truth_val, int index) {
 	Statement * formula = proof[index];
 	
 	int line1 = formula->line1;
 	int line2 = formula->line2;
-	return true;
+	
+	string rule1 = proof[line1]->value;
+	string rule2 = proof[line2]->value;
+	
+	if (truth_val[line1] == true && truth_val[line2] == true) return true;
+	else return false;
 }
-bool and_el2(vector <Statement *> proof, vector <bool> truth_val, int index) {}
-bool or_intro1(vector <Statement *> proof, vector <bool> truth_val, int index) {}
-bool or_intro2(vector <Statement *> proof, vector <bool> truth_val, int index) {}
-bool impl_el(vector <Statement *> proof, vector <bool> truth_val, int index) {}
-bool MT(vector <Statement *> proof, vector <bool> truth_val, int index) {}
+bool MT(vector <Statement *> proof, vector <bool> truth_val, int index) {
+	Statement * formula = proof[index];
+	
+	int line1 = formula->line1;
+	int line2 = formula->line2;
+	
+	string rule1 = proof[line1]->value;
+	string rule2 = proof[line2]->value;
+	
+	if (truth_val[line1] == true && truth_val[line2] == false) return true;
+	else return false;	
+}
 
 
 
@@ -115,12 +148,10 @@ bool MT(vector <Statement *> proof, vector <bool> truth_val, int index) {}
 bool assign_rule(string rule,vector <Statement *> proof, vector <bool> truth_val, int index){
 	
 	if (rule == "^i") return and_intro(proof, truth_val, index);
-	//else if (rule == "^e1") return and_el1(proof, truth_val, index);
-	//else if (rule == "^e2") return and_el2(proof, truth_val, index);
-	//else if (rule == "Vi1") return or_intro1(proof, truth_val, index);
-	//else if (rule == "Vi2") return or_intro2(proof, truth_val, index);
-	//else if (rule == "->e") return impl_el(proof, truth_val, index);
-	//else if (rule == "MT") 	return MT(proof, truth_val, index);
+	else if (rule == "^e1" || rule == "^e2") return and_el(proof, truth_val, index);
+	else if (rule == "Vi1" || rule == "Vi2") return or_intro1(proof, truth_val, index);
+	else if (rule == "->e") return impl_el(proof, truth_val, index);
+	else if (rule == "MT") 	return MT(proof, truth_val, index);
 	else return true;
 }	
 
