@@ -1,22 +1,23 @@
 #include <iostream> 
-#include <stack> // calls stack class
+#include <stack> 
 #include <string> 
 using namespace std;
 /*
-Algorithm : 
-1 : Push '(' onto stack and add ')' to the end of the expression
-2 : Scan X from left to right and REPEAT steps 3 to 6 for each element of X UNTIL the stack is empty 
-3 : If an operand is encountered, add it to result
-4 : If a '(' is encountered, push it onto stack
-5 : If an operator is encountered, then : 
+	Algorithm : 
+	1 : Push '(' onto stack and add ')' to the end of the expression
+	2 : Scan X from left to right and REPEAT steps 3 to 6 for each element of X UNTIL the stack is empty 
+	3 : If an operand is encountered, add it to result
+	4 : If a '(' is encountered, push it onto stack
+	5 : If an operator is encountered, then : 
         (a) Repeatedly pop from stack and add to result each operator which has the same precedence as or higher precedence than operator.
         (b) Add operator to stack
-6 : If ')' is encountered then :
+	6 : If ')' is encountered then :
         (a) Repeatedly pop from stack and add to result each operator until a '(' is encountered
         (b) Remove the '('
-7 : END    
+	7 : END    
 */
-int main()
+
+void infix_to_postfix()
 {
     /*
         Precondition : The infix expression must be well formed and fully parenthesized
@@ -26,9 +27,8 @@ int main()
 	string infix, postfix; // infix is input and postfix is the output expressions
 	stack <char> operators; // contains the operators and parenethesis
 
-	getline(cin, infix); // User inputs the strings
-	infix = '(' + infix + ')'; // adds parenthesis at both the ends of the expression
-
+	cin >> infix;
+		
 	for (int i = 0; i < infix.length(); i++)
 	{
 		switch (infix[i])
@@ -63,7 +63,10 @@ int main()
 		}
 	}
 	cout << postfix << endl;	
-	
-	
+}
+
+int main()
+{
+	infix_to_postfix();
 }
 
