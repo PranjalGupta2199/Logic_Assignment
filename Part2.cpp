@@ -23,8 +23,8 @@ using namespace std;
 	
 	Then check iteratively, whether any non-premise ith statement (2 <= i <= n) 
 	can be derived from it's previous statements.
-		1. If yes, upadate the loop and make a new statement object.
-			> In case of AND introduction, no need to update in the truth table.
+		1. If yes, upadate the truth value of that Statement object.
+			> In case of AND introduction, both the premises must be present.
 			> In case of AND elimination, a new premise object will be created.
 			> In case of OR introduction, first check if either of one them is true, then make another
 				premise object and assign T as it's truth value.
@@ -40,8 +40,6 @@ using namespace std;
 */
 
 
-// static vector <string> proof;
-//	static vector <Statement> * rule_ref;
 class Statement{
 
 public :
@@ -72,8 +70,8 @@ public :
 	{
 		if (counter == 0) value = temp;
 		else if (counter == 1) rule = temp;
-		else if (counter == 2) line1 = stoi(temp);
-		else if (counter == 3) line2 = stoi(temp);
+		else if (counter == 2) line1 = stoi(temp) - 1;
+		else if (counter == 3) line2 = stoi(temp) - 1;
 	}
 	
 	void print(){
@@ -81,6 +79,67 @@ public :
 	}
 	
 };
+
+bool and_intro(vector <Statement *> proof, vector <bool> truth_val, int index){
+	Statement * formula = proof[index];
+	
+	int line1 = formula->line1;
+	int line2 = formula->line2;
+	
+	string rule1 = proof[line1]->value;
+	string rule2 = proof[line2]->value;
+	
+	if (formula->value != "(" + rule1 + "^" + rule2 + ")") return false;
+	
+	if (truth_val[line1] == true && truth_val[line2] == true) return true;
+	else return false;
+}
+
+
+bool and_el1(vector <Statement *> proof, vector <bool> truth_val, int index){
+	Statement * formula = proof[index];
+	
+	int line1 = formula->line1;
+	int line2 = formula->line2;
+	return true;
+}
+bool and_el2(vector <Statement *> proof, vector <bool> truth_val, int index) {}
+bool or_intro1(vector <Statement *> proof, vector <bool> truth_val, int index) {}
+bool or_intro2(vector <Statement *> proof, vector <bool> truth_val, int index) {}
+bool impl_el(vector <Statement *> proof, vector <bool> truth_val, int index) {}
+bool MT(vector <Statement *> proof, vector <bool> truth_val, int index) {}
+
+
+
+
+bool assign_rule(string rule,vector <Statement *> proof, vector <bool> truth_val, int index){
+	
+	if (rule == "^i") return and_intro(proof, truth_val, index);
+	//else if (rule == "^e1") return and_el1(proof, truth_val, index);
+	//else if (rule == "^e2") return and_el2(proof, truth_val, index);
+	//else if (rule == "Vi1") return or_intro1(proof, truth_val, index);
+	//else if (rule == "Vi2") return or_intro2(proof, truth_val, index);
+	//else if (rule == "->e") return impl_el(proof, truth_val, index);
+	//else if (rule == "MT") 	return MT(proof, truth_val, index);
+	else return true;
+}	
+
+void check_validity(vector <Statement *> proof, vector <bool> truth_val){
+	for (int i = 0; i < proof.size(); i++)
+	{
+		Statement *temp;
+		temp = proof[i];
+		
+		truth_val[i] = assign_rule(temp->rule, proof, truth_val, i);
+		
+		if (truth_val[i] == false) {
+			cout << "INVALID PROOF" << endl;
+			exit(0);
+		}
+		else {}
+	}
+	cout << "VALID PROOF" << endl;
+}
 
 int main(){
 	int n;
@@ -100,6 +159,8 @@ int main(){
 		if (t -> rule == "P") truth_val.push_back(true);
 		else truth_val.push_back(false);
 	}
+	
+	check_validity(proof, truth_val);
 }
 
 
