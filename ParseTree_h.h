@@ -1,12 +1,16 @@
+#ifndef ParseTree_H
+#define ParseTree_H
+
 #include <iostream>
+
 #include <string>
 #include <vector>
 using namespace std;
 
 /**
     CS F214 Asn 2
-    Part1(b).cpp
-    Purpose : Prints the infix expression from the given postfix by making a parse tree
+    ParseTree_h.h
+    Purpose : Contains class defintions for a Parse Tree 
     
     @author : Pranjal Gupta
               Abhishree Jain
@@ -48,83 +52,7 @@ using namespace std;
 *               child1.
 * [end of FOR loop] 
 *   
-*/ 
- 
-
-
-/**
-    This is a class for a node in the binary tree. 
-    
-    Members : 
-        value : char
-            Will be an operator or an operand
-        parent : * Leaf
-            Will point to this node's parent
-        chidl1 : * Leaf 
-            Will point to left child node
-        child2 : * Leaf 
-            Will to point to right child node
 */
-class Leaf{
-public :
-    char value;
-    Leaf * parent;
-    Leaf * child1;
-    Leaf * child2;
-
-/*
-    Constructor for Leaf class
-    Intializes all the data members.
-*/
-    Leaf(char v){
-        parent = NULL;
-        child1 = NULL;
-        child2 = NULL;
-        value = v;
-    }
-
-
-/**
-    Adds a new node to head node.
-
-    @param : head_ref is a pointer to head node
-             temp_ref is a pointer to the child2 node
-
-    @returns pointer to the new head node, i.e child2 
-*/
-    Leaf * add_child2(Leaf ** head_ref, Leaf ** temp_ref){
-        Leaf * head = *head_ref;
-        Leaf * temp = *temp_ref;
-        
-        head->child2 = temp;
-        temp->parent = head;
-        head = temp;
-
-        return head;
-    }
-
-
-/**
-    Finds the nearest node to head which has no child1.
-
-    @param : head_ref is a pointer to head node
-             temp_ref is a pointer to the child1 node
-             
-    @returns pointer to the new head node, i.e child1 
-*/
-    Leaf * add_child1(Leaf ** head_ref, Leaf ** temp_ref){
-        Leaf * head = *head_ref;
-        Leaf * temp = *temp_ref;
-
-        do head = head->parent;
-        while (head->child1 != NULL);
-        head->child1 = temp;
-        temp->parent = head;
-        head = temp;
-
-        return head;
-    }
-};
 
 
 class ParseTree{
@@ -148,10 +76,10 @@ public :
             Leaf* temp;
             temp = new Leaf(postfix[i]);
             
-            if (temp->value == '~') {
+            if (temp -> value == '~') {
                 Leaf *t;
                 t = new Leaf('\0');
-                temp-> child1 = t;
+                temp ->  child1 = t;
             } //< Negation will always have child1 as some default value
             
             switch (postfix[i]) {
@@ -165,27 +93,27 @@ public :
                         root = temp;
                         head = temp;       
                     
-                    } else if(head->value == 'V' || head->value == '^' || head->value == '~' || head->value == '>') {
-                       head = temp->add_child2(&head, &temp);   //< Adding a operator as child2 to head      
+                    } else if(head -> value == 'V' || head -> value == '^' || head -> value == '~' || head -> value == '>') {
+                       head = temp -> add_child2(&head, &temp);   //< Adding a operator as child2 to head      
                     
                     } else {
-                        head = temp->add_child1(&head, &temp); //< finding the nearest node which has a NULL child1
+                        head = temp -> add_child1(&head, &temp); //< finding the nearest node which has a NULL child1
                     
                     } break;
                 
                 default :
                     
-                    if (head->parent == NULL){
+                    if (head -> parent == NULL){
                     // If the tree has only one node, i.e root
-                        head->child2 = temp;
-                        temp->parent = head;
-                        head = head->child2;
+                        head -> child2 = temp;
+                        temp -> parent = head;
+                        head = head -> child2;
                     
-                    } else if (head->value == 'V' || head->value == '^' || head->value == '>' || head->value == '~'){
-                        head = temp->add_child2(&head, &temp); //< Adding operand under a operator
+                    } else if (head -> value == 'V' || head -> value == '^' || head -> value == '>' || head -> value == '~'){
+                        head = temp -> add_child2(&head, &temp); //< Adding operand under a operator
                     
                     } else {
-                        head = temp->add_child1(&head, &temp); //< Finding the nearest node which has a NULL child1
+                        head = temp -> add_child1(&head, &temp); //< Finding the nearest node which has a NULL child1
                     
                     } break;
             }
@@ -208,33 +136,20 @@ public :
 */
     void in_order(Leaf *head_ref){
         
-        if (head_ref->child1 != NULL && head_ref->child2 != NULL){
+        if (head_ref -> child1 != NULL && head_ref -> child2 != NULL){
             cout << "(";
-            in_order(head_ref->child1); //< traverse the left sub-tree
-            cout << " " << head_ref->value << " "; // print the root node
-            in_order(head_ref->child2); //< traverse the right sub-tree
+            in_order(head_ref -> child1); //< traverse the left sub-tree
+            cout << " " << head_ref -> value << " "; // print the root node
+            in_order(head_ref -> child2); //< traverse the right sub-tree
             cout << ")";        
             return;
         
         } else {
-            if(head_ref->value == '\0') return; //< default child1 of negation is not printed
-            else cout << head_ref->value; //< Prints the operand
+            if(head_ref -> value == '\0') return; //< default child1 of negation is not printed
+            else cout << head_ref -> value; //< Prints the operand
             return;
         }
     }
 };
 
-
-
-
-
-
-int main(){
-    ParseTree *t; 
-    t = new ParseTree();
-
-    string postfix;
-    cin >> postfix;
-
-    t->postfix_to_parse_tree(postfix);
-}
+#endif
