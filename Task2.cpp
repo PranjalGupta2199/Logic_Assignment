@@ -72,44 +72,16 @@ public :
     Leaf * child1;
     Leaf * child2;
 
-    Leaf(char v){
 /*
     Constructor for Leaf class
     Intializes all the data members.
 */
+    Leaf(char v){
         parent = NULL;
         child1 = NULL;
         child2 = NULL;
         value = v;
     }
-};
-
-
-
-/*
-    Precondition : Input must be a pointer of Leaf type pointing to the root node 
-                   of the binary tree
-    Postcondition : Prints the fully parenthesized infix expression by performing 
-                  sthe in-order traversal of the binary tree
-    
-    @param : Leaf *ptr 
-        Pointer to the root node of the parse tree
-    @returns : void
-*/
-void in_order(Leaf *head_ref){
-    if (head_ref->child1 != NULL && head_ref->child2 != NULL){
-        cout << "(";
-        in_order(head_ref->child1); //< traverse the left sub-tree
-        cout << " " << head_ref->value << " "; // print the root node
-        in_order(head_ref->child2); //< traverse the right sub-tree
-        cout << ")";        
-        return;
-    } else {
-        if(head_ref->value == '\0') return; //< The left node of negation operator is assigned this value
-        else cout << head_ref->value; //< Prints the operand
-        return;
-    }
-}
 
 
 /**
@@ -120,17 +92,16 @@ void in_order(Leaf *head_ref){
 
     @returns pointer to the new head node, i.e child2 
 */
-Leaf * add_child2(Leaf ** head_ref, Leaf ** temp_ref){
-    Leaf * head = *head_ref;
-    Leaf * temp = *temp_ref;
-    
-    head->child2 = temp;
-    temp->parent = head;
-    head = temp;
+    Leaf * add_child2(Leaf ** head_ref, Leaf ** temp_ref){
+        Leaf * head = *head_ref;
+        Leaf * temp = *temp_ref;
+        
+        head->child2 = temp;
+        temp->parent = head;
+        head = temp;
 
-    return head;
-}
-
+        return head;
+    }
 
 
 /**
@@ -141,89 +112,129 @@ Leaf * add_child2(Leaf ** head_ref, Leaf ** temp_ref){
              
     @returns pointer to the new head node, i.e child1 
 */
-Leaf * add_child1(Leaf ** head_ref, Leaf ** temp_ref){
-    Leaf * head = *head_ref;
-    Leaf * temp = *temp_ref;
+    Leaf * add_child1(Leaf ** head_ref, Leaf ** temp_ref){
+        Leaf * head = *head_ref;
+        Leaf * temp = *temp_ref;
 
-    do head = head->parent;
-    while (head->child1 != NULL);
-    head->child1 = temp;
-    temp->parent = head;
-    head = temp;
+        do head = head->parent;
+        while (head->child1 != NULL);
+        head->child1 = temp;
+        temp->parent = head;
+        head = temp;
 
-    return head;
-}
+        return head;
+    }
+};
 
 
+class ParseTree{
+public : 
+    Leaf * root = NULL; //< top node in the parse tree
+    Leaf * head = NULL; //< node which moves along the tree while adding new nodes 
 
 /**
     Precondition:  The input must be a correct postfix expression
     Postcondition: Prints the infix expression of the given postfix by forming a binary tree
     
+    @param : postfix expression 
     @returns : void
 */
-void postfix_to_binary_tree(){
-    string postfix;
-    getline(cin, postfix);
-    
-    Leaf * root = NULL; //< top node in the parse tree
-    Leaf * head = NULL; //< node which moves along the tree while adding new nodes 
-    for (int i = postfix.length() - 1; i >= 0; i--)
-    {
-        // creating new instance of Leaf class
-        Leaf* temp;
-        temp = new Leaf(postfix[i]);
+    void postfix_to_parse_tree(string postfix){
+        //string postfix;
+        //getline(cin, postfix);
         
-        if (temp->value == '~') {
-/** 
-    Negation, by default will always have it's child1 having the value
-   '\0'. The next node will be added to it's child2 
-*/
-            Leaf *t;
-            t = new Leaf('\0');
-            temp-> child1 = t;
-        }
-        
-        switch (postfix[i]) {
-            case('V') :
-            case('^') :
-            case('~') :
-            case('>') :
-
-                if (head == NULL){
-                // tree is empty
-                    root = temp;
-                    head = temp;       
-                
-                } else if(head->value == 'V' || head->value == '^' || head->value == '~' || head->value == '>') {
-                   head = add_child2(&head, &temp);   //< Adding a operator as child2 to head      
-                
-                } else {
-                    head = add_child1(&head, &temp); //< finding the nearest node which has a NULL child1
-                
-                } break;
+        for (int i = postfix.length() - 1; i >= 0; i--){
+            // creating new instance of Leaf class
+            Leaf* temp;
+            temp = new Leaf(postfix[i]);
             
-            default :
+            if (temp->value == '~') {
+                Leaf *t;
+                t = new Leaf('\0');
+                temp-> child1 = t;
+            } //< Negation will always have child1 as some default value
+            
+            switch (postfix[i]) {
+                case('V') :
+                case('^') :
+                case('~') :
+                case('>') :
+
+                    if (head == NULL){
+                    // tree is empty
+                        root = temp;
+                        head = temp;       
+                    
+                    } else if(head->value == 'V' || head->value == '^' || head->value == '~' || head->value == '>') {
+                       head = temp->add_child2(&head, &temp);   //< Adding a operator as child2 to head      
+                    
+                    } else {
+                        head = temp->add_child1(&head, &temp); //< finding the nearest node which has a NULL child1
+                    
+                    } break;
                 
-                if (head->parent == NULL){
-                // If the tree has only one node, i.e root
-                    head->child2 = temp;
-                    temp->parent = head;
-                    head = head->child2;
-                
-                } else if (head->value == 'V' || head->value == '^' || head->value == '>' || head->value == '~'){
-                    head = add_child2(&head, &temp); //< Adding operand under a operator
-                
-                } else {
-                    head = add_child1(&head, &temp); //< Finding the nearest node which has a NULL child1
-                
-                } break;
+                default :
+                    
+                    if (head->parent == NULL){
+                    // If the tree has only one node, i.e root
+                        head->child2 = temp;
+                        temp->parent = head;
+                        head = head->child2;
+                    
+                    } else if (head->value == 'V' || head->value == '^' || head->value == '>' || head->value == '~'){
+                        head = temp->add_child2(&head, &temp); //< Adding operand under a operator
+                    
+                    } else {
+                        head = temp->add_child1(&head, &temp); //< Finding the nearest node which has a NULL child1
+                    
+                    } break;
+            }
         }
-    }
-    in_order(root);  // calls in-order traversal function
-    cout << endl; 
+
+        in_order(root); // calls in-order traversal method
+        cout << endl;
 }
 
+
+/**
+    Precondition : Input must be a pointer of Leaf type pointing to the root node 
+                   of the binary tree
+    Postcondition : Prints the fully parenthesized infix expression by performing 
+                  sthe in-order traversal of the binary tree
+    
+    @param : Leaf *ptr 
+        Pointer to the root node of the parse tree
+    @returns : void
+*/
+    void in_order(Leaf *head_ref){
+        
+        if (head_ref->child1 != NULL && head_ref->child2 != NULL){
+            cout << "(";
+            in_order(head_ref->child1); //< traverse the left sub-tree
+            cout << " " << head_ref->value << " "; // print the root node
+            in_order(head_ref->child2); //< traverse the right sub-tree
+            cout << ")";        
+            return;
+        
+        } else {
+            if(head_ref->value == '\0') return; //< default child1 of negation is not printed
+            else cout << head_ref->value; //< Prints the operand
+            return;
+        }
+    }
+};
+
+
+
+
+
+
 int main(){
-    postfix_to_binary_tree();
+    ParseTree *t; 
+    t = new ParseTree();
+
+    string postfix;
+    cin >> postfix;
+
+    t->postfix_to_parse_tree(postfix);
 }
