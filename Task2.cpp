@@ -85,6 +85,7 @@ public :
 };
 
 
+
 /*
     Precondition : Input must be a pointer of Leaf type pointing to the root node 
                    of the binary tree
@@ -109,6 +110,50 @@ void in_order(Leaf *head_ref){
         return;
     }
 }
+
+
+/**
+    Adds a new node to head node.
+
+    @param : head_ref is a pointer to head node
+             temp_ref is a pointer to the child2 node
+
+    @returns pointer to the new head node, i.e child2 
+*/
+Leaf * add_child2(Leaf ** head_ref, Leaf ** temp_ref){
+    Leaf * head = *head_ref;
+    Leaf * temp = *temp_ref;
+    
+    head->child2 = temp;
+    temp->parent = head;
+    head = temp;
+
+    return head;
+}
+
+
+
+/**
+    Finds the nearest node to head which has no child1.
+
+    @param : head_ref is a pointer to head node
+             temp_ref is a pointer to the child1 node
+             
+    @returns pointer to the new head node, i.e child1 
+*/
+Leaf * add_child1(Leaf ** head_ref, Leaf ** temp_ref){
+    Leaf * head = *head_ref;
+    Leaf * temp = *temp_ref;
+
+    do head = head->parent;
+    while (head->child1 != NULL);
+    head->child1 = temp;
+    temp->parent = head;
+    head = temp;
+
+    return head;
+}
+
 
 
 /**
@@ -139,59 +184,40 @@ void postfix_to_binary_tree(){
             temp-> child1 = t;
         }
         
-        switch (postfix[i]) 
-        {
-        // If the character is an operator
+        switch (postfix[i]) {
             case('V') :
             case('^') :
             case('~') :
             case('>') :
+
                 if (head == NULL){
                 // tree is empty
                     root = temp;
                     head = temp;       
-                }
-                else if(head->value == 'V' || head->value == '^' || head->value == '~' || head->value == '>') {
-                // Adding a operator as child2 to head
-                    head->child2 = temp;
-                    temp->parent = head;
-                    head = temp;           
-                    }
-                else {
-                // finding the nearest node which has a NULL child1
-                    do head = head->parent;
-                    while (head->child1 != NULL);
-
-                    head->child1 = temp;
-                    temp->parent = head;
-                    head = temp;
-                }
-                break;
+                
+                } else if(head->value == 'V' || head->value == '^' || head->value == '~' || head->value == '>') {
+                   head = add_child2(&head, &temp);   //< Adding a operator as child2 to head      
+                
+                } else {
+                    head = add_child1(&head, &temp); //< finding the nearest node which has a NULL child1
+                
+                } break;
+            
             default :
-                if (head->parent == NULL)
-                {
+                
+                if (head->parent == NULL){
                 // If the tree has only one node, i.e root
                     head->child2 = temp;
                     temp->parent = head;
                     head = head->child2;
-                }
-                else if (head->value == 'V' || head->value == '^' || head->value == '>' || head->value == '~')
-                {
-                // Adding operand under a operator
-                    head->child2 = temp;
-                    temp->parent = head;
-                    head = temp;
-                }
-                else 
-                {
-                // Finding the nearest node which has a NULL child1
-                    do head = head->parent;
-                    while (head->child1 != NULL);
-                    head->child1 = temp;
-                    temp->parent = head;
-                    head = temp;
-                }
-                break;
+                
+                } else if (head->value == 'V' || head->value == '^' || head->value == '>' || head->value == '~'){
+                    head = add_child2(&head, &temp); //< Adding operand under a operator
+                
+                } else {
+                    head = add_child1(&head, &temp); //< Finding the nearest node which has a NULL child1
+                
+                } break;
         }
     }
     in_order(root);  // calls in-order traversal function
