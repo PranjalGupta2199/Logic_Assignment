@@ -1,0 +1,106 @@
+/**
+* Input : Postfix string
+*
+* Output : The infix expression after performing in-order traversal of the tree formed.
+*
+* Definitions : 
+*   Symbols for operators ::=  ~ <negation> | ^ <AND> | V <OR> | > <implication>
+*
+*/ 
+ 
+
+
+/**
+* Input : Postfix string
+*
+* Output : The infix expression after performing in-order traversal of the tree formed.
+*
+* Definitions : 
+*   Symbols for operators ::=  ~ <negation> | ^ <AND> | V <OR> | > <implication>
+*
+* in-order traversal :    
+*   1. Traverse the left subtree, i.e., call Inorder(left-subtree)
+*   2. Visit the root.
+*   3. Traverse the right subtree, i.e., call Inorder(right-subtree)
+*
+*
+* postfix_to_binary_tree : 
+* 
+* Input the given the postfix expression.
+* Then iterate from the last character of the string, making a new node for each character you parse.
+*   1. If the character to be added is an operator : 
+*       > If the there is no root node, then make the temp node as root. This will happen only happen when the 
+*           character is an operator (as the root node will only be an operator)
+*       > Check the last node added : 
+*           >> If it's an operator, then add the current node to it's child2.
+*           >> Else (i.e when the character is an operand) find that node just above the last node added 
+*               which has an empty child1. Then add this temp as child1
+*   2. Else if the character to be added is an operand,
+*       > If the last node added is the root, then add the current node as it's child2/
+*       > Check the last node added : 
+*           >> If it was an operator, then add temp node as it's child2.
+*           >> Else, find that parent of the last node which has an empty child1. Add the current operator as it's 
+*               child1.
+* [end of FOR loop] 
+*   
+*/
+
+/**
+* Input : Infix string
+*
+* Output : The postfix expression of the input
+*
+* Definitions : 
+*   Symbols for operators ::=  ~ <negation> | ^ <AND> | V <OR> | > <implication>
+*
+* Assumptions : 
+*    The infix expression is well-formed and well parenthesized.
+*
+* Algorithm : 
+*   1 : Push '(' onto stack and add ')' to the end of the expression
+*   2 : Scan X from left to right and REPEAT steps 3 to 6 for each element of X UNTIL the stack is empty 
+*   3 : If an operand is encountered, add it to result
+*   4 : If a '(' is encountered, push it onto stack
+*   5 : If an operator is encountered, then : 
+*       (a) Repeatedly pop from stack and add to result each operator which has the same precedence as or higher precedence than operator.
+*       (b) Add operator to stack
+*   6 : If ')' is encountered then :
+*       (a) Repeatedly pop from stack and add to result each operator until a '(' is encountered
+*       (b) Remove the '('
+*   7 : END    
+*/
+
+
+/**
+* Input : n (integer)
+*   n lines each of the form <statement>/<rule>[ /line1[ /line2 ]]
+*   
+* Output : Valid/Invalid proof
+*
+* Definitions:
+*   <statement> ::= p | ¬p | ¬(<statement>) | (<statement> ∧ <statement>) | (<statement> ∨ <statement>) |
+*   (<statement> → <statement>)
+*   <rule> ::= ∧i | ∧e1 | ∧e2 | ∨i1 | ∨i2 | →e |P
+*
+* Algorithm : 
+* Make a object (statement) with value, rule, line1, line2 and its truth value
+*
+* Assign each premise a truth value : 
+*   1. T in case of premise 
+*   2. False in case of any other premise. 
+*
+* Then check iteratively, whether any non-premise ith statement (2 <= i <= n) 
+* can be derived from any of it's previous statements.
+*   1. If yes, upadate the truth value of that Statement object.
+*       > In case of AND introduction, both the premises must be present and truth val must be true.
+*       > In case of AND elimination, a new premise object will be created.
+*       > In case of OR introduction, first check if either of one them is true, then make another
+*           premise object and assign T as it's truth value.
+*       > In case of IMPLICATION elimination, check if the antecedent is true, then make a new premise 
+*           and assign T as it's truth value. 
+*           
+*   2. Else, break the loop and print "Invalid Proof" and exit.
+*   
+*[End of FOR loop] print "Valid Proof"
+*/
+

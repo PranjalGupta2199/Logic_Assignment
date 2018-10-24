@@ -5,13 +5,13 @@
 #include "ParseTree_h.h"
 using namespace std;
 /**
-    CS F214, Asn 2
-    Part1b.cpp
-    Purpose : Calls LeafNode and ParseTree_h header files 
+    \brief CS F214, Asn 2
+    \brief Part1b.cpp
+    \details Purpose : Calls LeafNode and ParseTree_h header files 
 
-    @author : Pranjal Gupta
+    \author : Pranjal Gupta
               Abhishree Jain
-    @version : 1.0 24/10/2018
+    \version : 1.0 24/10/2018
 */
 
 int main(){
