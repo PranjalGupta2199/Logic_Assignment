@@ -197,7 +197,7 @@ public :
 
         // checks whether the statement can be derived from other statement 
         // at line1 and line2   
-        if ("(" + proof[l2] -> value + " -> " + formula -> value + ")" != proof[l1] -> value) return false;
+        if ("(" + proof[l2] -> value + ">" + formula -> value + ")" != proof[l1] -> value) return false;
         else if (truth_val[l1] == true && truth_val[l2] == true) return true;
         else return false;
     }
@@ -213,7 +213,7 @@ public :
         
         // checks whether the statement can be derived from other statement 
         // at line1 and line2   
-        if ("(" + formula -> value.substr(1) + " -> " + proof[l2] -> value.substr(1) + ")" != proof[l1] -> value) return false;
+        if ("(" + formula -> value.substr(1) + ">" + proof[l2] -> value.substr(1) + ")" != proof[l1] -> value) return false;
         else if (truth_val[l1] == true && truth_val[l2] == true) return true;
         else return false;
     }
@@ -230,7 +230,7 @@ public :
         else if (rule == "^e2") return and_el2(proof, truth_val, index);
         else if (rule == "Vi1") return or_intro1(proof, truth_val, index);
         else if (rule == "Vi2") return or_intro2(proof, truth_val, index);
-        else if (rule == " -> e") return impl_el(proof, truth_val, index);
+        else if (rule == "->e") return impl_el(proof, truth_val, index);
         else if (rule == "MT")  return MT(proof, truth_val, index);
         else return false; // if no matching rules, return false
     } 
